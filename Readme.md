@@ -31,18 +31,29 @@ Los archivos de texto solo pueden tratarse mediante acceso secuencial. Serial al
 Los archivos con tipo se pueden tratar de cualquiera de las dosmaneras. 
 
 ### Opreaciones para acceso secuencial:
-- Asignar
-- Abrir
-- Cerrar
-- Leer
-- Escribir
-- EOLn
-- EOF
+- Asignar: Vincula el nombre interno con el externo del archivo-.
+- Abrir: Abre el archivo, (Reset,Rewrite,Append en pascal).
+- Cerrar: Cierra el archivo
+- Leer(f,x): Obtiene el elemento corriente en la variable x
+- Escribir: Escribe un elemento en la posicion acutal del archivo
+- EOLn: Para archivos de texto devuelve verdadero si estamos en el caracter de fin de linea
+- EOF: Devuelve verdadero si estamos en el fin del archivo(despues del ultimo elemento)
 
 ### Opreaciones para acceso directo:
 - PosiciónActual
-- TamañoArchivo
-- irPos
+- TamañoArchivo: Cantidad de registros almacenados
+- irPos(f,x): Se posiciona sobre el elemento nº x.
+
+### Buffer
+Es una posición intermedia entre un archivo y un programa, esto se hace para "amortiguar" los tiempos de carga.
+
+Las operaciones de lectura y escritura se definen con una variable auxilar que representa esta memoria intermedia llamada "buffer".
+
+Cuando se declara un archivo en pascal, el compilador automaticamente crea esta variable, que es del mismo tipo que los elementos que contiene el archivo.
+
+Esta variable siempre contiene el elemento corriente de la secuencia, entonces, una vez que el archivo es abierto el primer elemento pasa al buffer. Cuando hacemos un Read el elemento que está en el buffer para a la variable que elijamos en la accion Read, y automaticamente el siguiente elemento del archivo se coloca en el buffer.
+
+Por esta razon cada vez que Leemos o escribimos automaticamente estamos avanzando en la secuencia.
 
 ## Archivos y secuencias
 
@@ -76,8 +87,14 @@ En pascal hay 3 acciones para abrir un archivo
 
 En pascal cuando intentamos abrir un archivo que no existe, o que esta bloqueado, se produce un error, para evitar esto se usa la directiva {$I} para capturar el error en la variable IOResult y evitar que el programa falle. Si el valor de IOResult es 0 significa que la apertura fue exitosa.
 
-```
-ejemplo de ioresult
+```pascal
+{$I-}
+RESET(arch);
+{$I+}
+IF IOResult <> 0 THEN
+BEGIN
+  WRITELN('El archivo no existe');
+END; 
 ```
 
 Una vez que se ha terminado de trabajar con el archivo se lo debe dejar preparado para que otro programa pueda utilizarlo. para eso se usa la primitiva Cerrar.
@@ -96,7 +113,7 @@ Una vez que leemos o escribimos el cabezal se posiciona en el registro siguiente
 
 Entonces por ejemplo podriamos leer toda la informacion del archivo de texto de la siguiente manera
 
-```
+```pascal
 Mientras No EOF(arch) hacer
   Leer(arch,cad);
   escribir(cad)
@@ -110,5 +127,10 @@ Tambien podemos acceder a los elementos del archivo de forma directa usando las 
 - TamañoArchivo(arch): cantidad de elementos en el archivo.
 - irPos(arch,indice): Situa el cabezal sobre el archivo en la posicion indicada.
 
+## Eliminación de registros
+Hay varias formas de borrar registros de un archivo:
 
-Comentar sobre borrado virtual y fisico.
+- Borrado Virtual: Haciendo falso un campo que indique si el registro esta borrado para ignorarlo en nuestro programa.
+- Borrado fisico: Crear un nuevo archivo con todos los registros excepto el que queremos borrar y sobreescribir el archivo original.
+- Una combinacion de las anteriores: Por ejemplo hacer borrado virtual durante la ejecución del programa y al momento de salir hacer el eliminado fisico para manejar mejor el tiempo.
+
