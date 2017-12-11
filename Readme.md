@@ -134,3 +134,5 @@ Hay varias formas de borrar registros de un archivo:
 - Borrado fisico: Crear un nuevo archivo con todos los registros excepto el que queremos borrar y sobreescribir el archivo original.
 - Una combinacion de las anteriores: Por ejemplo hacer borrado virtual durante la ejecución del programa y al momento de salir hacer el eliminado fisico para manejar mejor el tiempo.
 
+___
+<center><sub><sup>Pablo Androetto - 11-12-2017</sup></sub></center>
