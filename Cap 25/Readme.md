@@ -138,4 +138,3 @@ mientras i < n hacer
   i ← i + 1
 fmientras  
 ```
-
