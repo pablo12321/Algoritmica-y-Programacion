@@ -43,4 +43,3 @@ begin
     factorial_cola:=factorial_cola(n-1,sum*n);
 end;
 ```
-
